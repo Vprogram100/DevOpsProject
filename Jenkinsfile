@@ -10,22 +10,28 @@ pipeline {
 
         stage('Docker Down') {
             steps {
-                // השימוש ב-catchError מונע מהבילד לקרוס אם אין עדיין קונטיינרים ישנים להוריד
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    bat 'docker compose -f docker-compose.yml down'
+                // המעבר לתיקייה DevOpsProject מבטיח שדוקר יראה את הקובץ
+                dir('DevOpsProject') {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        bat 'docker compose down'
+                    }
                 }
             }
         }
 
         stage('Docker Build & Up') {
             steps {
-                bat 'docker compose -f docker-compose.yml up -d --build'
+                dir('DevOpsProject') {
+                    bat 'docker compose up -d --build'
+                }
             }
         }
 
         stage('Sanity Check') {
             steps {
-                bat 'docker ps'
+                dir('DevOpsProject') {
+                    bat 'docker ps'
+                }
             }
         }
     }
