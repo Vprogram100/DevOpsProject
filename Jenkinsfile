@@ -10,13 +10,16 @@ pipeline {
 
         stage('Docker Down') {
             steps {
-                bat 'docker compose down'
+                // השימוש ב-catchError מונע מהבילד לקרוס אם אין עדיין קונטיינרים ישנים להוריד
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    bat 'docker compose -f docker-compose.yml down'
+                }
             }
         }
 
         stage('Docker Build & Up') {
             steps {
-                bat 'docker compose up -d --build'
+                bat 'docker compose -f docker-compose.yml up -d --build'
             }
         }
 
