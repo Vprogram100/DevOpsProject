@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -11,19 +10,19 @@ pipeline {
 
         stage('Docker Down') {
             steps {
-                sh 'docker compose down'
+                bat 'docker compose down'
             }
         }
 
         stage('Docker Build & Up') {
             steps {
-                sh 'docker compose up -d --build'
+                bat 'docker compose up -d --build'
             }
         }
 
         stage('Sanity Check') {
             steps {
-                sh 'docker ps'
+                bat 'docker ps'
             }
         }
     }
