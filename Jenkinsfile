@@ -8,29 +8,16 @@ pipeline {
             }
         }
 
-        stage('Docker Down') {
+        stage('Debug - List Files') {
             steps {
-                // המעבר לתיקייה DevOpsProject מבטיח שדוקר יראה את הקובץ
-                dir('DevOpsProject') {
-                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        bat 'docker compose down'
+                echo "--- Checking Root Folder ---"
+                bat 'dir'
+                
+                echo "--- Checking DevOpsProject Folder ---"
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    dir('DevOpsProject') {
+                        bat 'dir'
                     }
-                }
-            }
-        }
-
-        stage('Docker Build & Up') {
-            steps {
-                dir('DevOpsProject') {
-                    bat 'docker compose up -d --build'
-                }
-            }
-        }
-
-        stage('Sanity Check') {
-            steps {
-                dir('DevOpsProject') {
-                    bat 'docker ps'
                 }
             }
         }
