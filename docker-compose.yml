@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: backend-container
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=development
+  volumes:
+      - ./backend-data:/app/instance
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend-container
+    ports:
+      - "3000:3000"
+    
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
